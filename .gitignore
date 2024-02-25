@@ -1,3 +1,6 @@
+/base/*/*/.idea/
+/base/*/*/cmake-build-debug/
+
 # Prerequisites
 *.d
 
