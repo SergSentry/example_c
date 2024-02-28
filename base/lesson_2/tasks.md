@@ -39,7 +39,7 @@ $A \land B \land \lnot C$
 
 
 ### Задание 4
-Доказать тождества $А \to В = \lnot A \lor B$, $А \harr В = (A \land B) \lor (\lnot A \land \lnot B)$
+Доказать тождества $А \to В = \lnot A \lor B$, $А \leftrightarrow В = (A \land B) \lor (\lnot A \land \lnot B)$
 
 #### Решение
 Таблица истиности для тождество $А \to В = \lnot A \lor B$
@@ -52,9 +52,9 @@ $A \land B \land \lnot C$
 | 1  |  1 | 1  | 0  | 1  |
 
 
-Таблица истиности для тождество $А \harr В = (A \land B) \lor (\lnot A \land \lnot B)$
+Таблица истиности для тождество $А \leftrightarrow В = (A \land B) \lor (\lnot A \land \lnot B)$
 
-| A | B | $\lnot A$ | $\lnot B$ |$А \harr В$ | $A \land B$ | $\lnot A \land \lnot B$ | $(A \land B) \lor (\lnot A \land \lnot B)$
+| A | B | $\lnot A$ | $\lnot B$ |$А \leftrightarrow В$ | $A \land B$ | $\lnot A \land \lnot B$ | $(A \land B) \lor (\lnot A \land \lnot B)$
 |----|----|:--:|:--:|:--:|:--:|:--:|:--:|
 | 0  |  0 | 1  | 1  | 1  | 0  | 1  | 1  |
 | 0  |  1 | 1  | 0  | 0  | 0  | 0  | 0  |
@@ -101,14 +101,14 @@ $A \land B \land \lnot C$
 <br><br>
 ### Ссылки
 
-<https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F>
+[Система счисления](https://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F)
 
 
-<https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F>
+[Позиционная система счисления](https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F)
 
-<https://ru.wikipedia.org/wiki/%D0%94%D0%B5%D1%81%D1%8F%D1%82%D0%B8%D1%87%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F>
+[Десятичная система счисления](https://ru.wikipedia.org/wiki/%D0%94%D0%B5%D1%81%D1%8F%D1%82%D0%B8%D1%87%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F)
 
-<https://ru.wikipedia.org/wiki/%D0%A8%D0%B5%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D1%87%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F>
+[Шестнадцатеричная система счисления](https://ru.wikipedia.org/wiki/%D0%A8%D0%B5%D1%81%D1%82%D0%BD%D0%B0%D0%B4%D1%86%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D1%87%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F)
 
-<https://rustem-af.ru/assets/res/files/160/matematicheskaya-logika-vse-lekcii.pdf>
+[Алгебра высказываний. Логические отношения](https://rustem-af.ru/assets/res/files/160/matematicheskaya-logika-vse-lekcii.pdf)
 
