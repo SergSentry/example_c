@@ -89,4 +89,10 @@ StatisticData calc_total_statistic(StatisticData *data);
 
 void print_help();
 
+void print_month_info(int monthNumber, StatisticData data);
+
+void print_info(StatisticData *data);
+
+void print_total_info(StatisticData data);
+
 #endif //TEMP_API_H
