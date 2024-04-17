@@ -129,22 +129,22 @@ void print_help() {
 }
 
 void print_month_info(int monthNumber, StatisticData data) {
-    printf("\nМесяц:%d\n", monthNumber);
-    printf("Записей:%d; Мин:%d; Макс:%d; Среднее:%.2f\n", data.count, data.min_temperature, data.max_temperature,
+    printf("\nMonth:%d\n", monthNumber);
+    printf("Records:%d; Min:%d; Max:%d; Average:%.2f\n", data.count, data.min_temperature, data.max_temperature,
            data.mean_temperature);
 }
 
 void print_info(StatisticData *data) {
     for (int i = 0; i < 12; i++) {
-        printf("\nМесяц:%d\n", i + 1);
-        printf("Записей:%d; Мин:%d; Макс:%d; Среднее:%.2f\n", data[i].count, data[i].min_temperature,
+        printf("\nMonth:%d\n", i + 1);
+        printf("Records:%d; Min:%d; Max:%d; Average:%.2f\n", data[i].count, data[i].min_temperature,
                data[i].max_temperature, data[i].mean_temperature);
     }
 }
 
 void print_total_info(StatisticData data) {
     printf("\nВсего:\n");
-    printf("Записей:%d; Мин:%d; Макс:%d; Среднее:%.2f\n", data.count, data.min_temperature, data.max_temperature,
+    printf("Records:%d; Min:%d; Max:%d; Average:%.2f\n", data.count, data.min_temperature, data.max_temperature,
            data.mean_temperature);
 }
 

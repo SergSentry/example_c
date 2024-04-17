@@ -1,8 +1,10 @@
 #include <unistd.h>
-
+#include <locale.h>
 #include "temp_api.h"
 
 int main(int argc, char *argv[]) {
+    setlocale(LC_ALL, "utf8");
+
     Link listHead = NULL;
 
     int key = 0;
@@ -27,37 +29,27 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (!showHelp)
-    {
-        if (fileName != NULL)
-        {
-            if (load_file(fileName, &listHead) != -1)
-            {
-                if (monthNumber >= 1 && monthNumber <= 12)
-                {
+    if (!showHelp) {
+        if (fileName != NULL) {
+            if (load_file(fileName, &listHead) != -1) {
+                if (monthNumber >= 1 && monthNumber <= 12) {
                     StatisticData total = calc_statistic_by_month(listHead, monthNumber);
                     print_month_info(monthNumber, total);
-                }
-                else if (monthNumber == -1)
-                {
+                } else if (monthNumber == -1) {
                     StatisticData *data = calc_statistic(listHead);
                     print_info(data);
 
                     StatisticData total = calc_total_statistic(data);
                     print_total_info(total);
-                }
-                else
-                    printf("Ошибка: Номер месяца должен быть числом от 1 до 12.");
+                } else
+                    printf("Error: The month number must be a number from 1 to 12.");
 
                 delete_link(&listHead);
-            }
-            else
-                printf("Ошибка: Проверте имя файла и путь к нему.");
-        }
-        else
+            } else
+                printf("Error: Check the file name and path to it.");
+        } else
             print_help();
-    }
-    else
+    } else
         print_help();
 
     return 0;
