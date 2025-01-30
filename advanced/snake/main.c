@@ -87,12 +87,18 @@ void go(struct snake_t *head) {
             mvprintw(head->y, --(head->x), "%c", ch);
             break;
         case RIGHT:
+            if (head->x >= max_x)
+                head->x = 0;
             mvprintw(head->y, ++(head->x), "%c", ch);
             break;
         case UP:
+            if (head->y <= 0)
+                head->y = max_y;
             mvprintw(--(head->y), head->x, "%c", ch);
             break;
         case DOWN:
+            if (head->y >= max_y)
+                head->y = 0;
             mvprintw(++(head->y), head->x, "%c", ch);
             break;
         default:
