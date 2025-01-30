@@ -127,6 +127,16 @@ void goTail(struct snake_t *head) {
     head->tail[0].y = head->y;
 }
 
+/*
+ Check state uroboros
+*/
+_Bool isCrash(struct snake_t *head) {
+    for (size_t i = 1; i < head->tsize; i++)
+        if (head->x == head->tail[i].x && head->y == head->tail[i].y)
+            return 1;
+    return 0;
+}
+
 int main() {
     snake_t *snake = (snake_t *) malloc(sizeof(snake_t));
     initSnake(snake, START_TAIL_SIZE, 10, 10);
@@ -144,6 +154,8 @@ int main() {
         goTail(snake);
         timeout(100); // Задержка при отрисовке
         changeDirection(snake, key_pressed);
+        if (isCrash(snake))
+            break;
     }
     free(snake->tail);
     free(snake);
