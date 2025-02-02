@@ -143,6 +143,18 @@ _Bool isCrash(struct snake_t *head) {
     return 0;
 }
 
+/*
+  Check hitting the tail
+*/
+int checkDirection(int32_t dir, int32_t key) {
+    if (KEY_DOWN == key && dir == UP || KEY_UP == key && dir == DOWN || KEY_LEFT == key && dir == RIGHT ||
+        KEY_RIGHT == key && dir == LEFT) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
 int main() {
     snake_t *snake = (snake_t *) malloc(sizeof(snake_t));
     initSnake(snake, START_TAIL_SIZE, 10, 10);
@@ -159,7 +171,10 @@ int main() {
         go(snake);
         goTail(snake);
         timeout(100); // Задержка при отрисовке
-        changeDirection(snake, key_pressed);
+
+        if (checkDirection(snake->direction, key_pressed))
+            changeDirection(snake, key_pressed);
+
         if (isCrash(snake))
             break;
     }
