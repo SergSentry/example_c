@@ -5,13 +5,14 @@
 #include <inttypes.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #define MIN_Y  2
 enum {
     LEFT = 1, UP, RIGHT, DOWN, STOP_GAME = KEY_F(10)
 };
 enum {
-    MAX_TAIL_SIZE = 100, START_TAIL_SIZE = 3, MAX_FOOD_SIZE = 20, FOOD_EXPIRE_SECONDS = 10
+    CONTROLS=2, MAX_TAIL_SIZE = 100, START_TAIL_SIZE = 3, MAX_FOOD_SIZE = 20, FOOD_EXPIRE_SECONDS = 10
 };
 
 
@@ -23,7 +24,8 @@ struct control_buttons {
     int right;
 } control_buttons;
 
-struct control_buttons default_controls = {KEY_DOWN, KEY_UP, KEY_LEFT, KEY_RIGHT};
+struct control_buttons default_controls[CONTROLS] = {{KEY_DOWN, KEY_UP, KEY_LEFT, KEY_RIGHT},
+                                                    {'S', 'W', 'A', 'D'}};
 
 /*
  Голова змейки содержит в себе
@@ -38,7 +40,7 @@ typedef struct snake_t {
     int direction;
     size_t tsize;
     struct tail_t *tail;
-    struct control_buttons controls;
+    struct control_buttons *controls;
 } snake_t;
 
 /*
@@ -108,14 +110,26 @@ void go(struct snake_t *head) {
 }
 
 void changeDirection(struct snake_t *snake, const int32_t key) {
-    if (key == snake->controls.down)
-        snake->direction = DOWN;
-    else if (key == snake->controls.up)
-        snake->direction = UP;
-    else if (key == snake->controls.right)
-        snake->direction = RIGHT;
-    else if (key == snake->controls.left)
-        snake->direction = LEFT;
+    for (size_t i = 0; i < CONTROLS; i++) {
+        struct control_buttons ctrl = snake->controls[i];
+
+        if (key == ctrl.down) {
+            snake->direction = DOWN;
+            break;
+        }
+        else if (key == ctrl.up) {
+            snake->direction = UP;
+            break;
+        }
+        else if (key == ctrl.right) {
+            snake->direction = RIGHT;
+            break;
+        }
+        else if (key == ctrl.left) {
+            snake->direction = LEFT;
+            break;
+        }
+    }
 }
 
 /*
@@ -155,7 +169,7 @@ int main() {
     timeout(0);    //Отключаем таймаут после нажатия клавиши в цикле
     int key_pressed = 0;
     while (key_pressed != STOP_GAME) {
-        key_pressed = getch(); // Считываем клавишу
+        key_pressed = toupper(getch()); // Считываем клавишу
         go(snake);
         goTail(snake);
         timeout(100); // Задержка при отрисовке
