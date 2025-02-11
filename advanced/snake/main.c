@@ -266,7 +266,7 @@ _Bool haveEat(struct snake_t *head, struct food f[]) {
     return 0;
 }
 
-_Bool update(snake_t *snake, int key_pressed) {
+_Bool updateGame(snake_t *snake, int key_pressed) {
     
     clock_t begin = clock();
     
@@ -292,32 +292,36 @@ _Bool update(snake_t *snake, int key_pressed) {
     return 0;
 }
 
-int main()
-{
-    snake_t *snake = (snake_t *) malloc(sizeof(snake_t));
-    
+void initGame(snake_t *snake) {
     initSnake(snake, START_TAIL_SIZE, 10, 10);
     initFood(food, MAX_FOOD_SIZE);
 
     initscr();
     keypad(stdscr, TRUE); // Включаем F1, F2, стрелки и т.д.
     raw();                // Откдючаем line buffering
-    noecho();            // Отключаем echo() режим при вызове getch
-    curs_set(FALSE);    //Отключаем курсор
+    noecho();             // Отключаем echo() режим при вызове getch
+    curs_set(FALSE);      // Отключаем курсор
     mvprintw(0, 0, "Use arrows for control. Press 'F10' for EXIT");
-    
+
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLACK);
 
     putFood(food, SEED_NUMBER);
-    timeout(0);    //Отключаем таймаут после нажатия клавиши в цикле
-    
+    timeout(0); // Отключаем таймаут после нажатия клавиши в цикле
+}
+
+int main()
+{
+    snake_t *snake = (snake_t *) malloc(sizeof(snake_t));
+
+    initGame(snake);
+
     int key_pressed = 0;
     while (key_pressed != STOP_GAME) {
         key_pressed = toupper(getch()); // Считываем клавишу
 
-        if (update(snake, key_pressed))
+        if (updateGame(snake, key_pressed))
             break;
     }
 
