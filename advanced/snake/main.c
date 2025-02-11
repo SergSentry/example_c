@@ -8,6 +8,7 @@
 #include <ctype.h>
 
 #define MIN_Y  2
+double DELAY = 0.1;
 
 enum {
     LEFT = 1, UP, RIGHT, DOWN, STOP_GAME = KEY_F(10)
@@ -265,7 +266,34 @@ _Bool haveEat(struct snake_t *head, struct food f[]) {
     return 0;
 }
 
-int main() {
+_Bool update(snake_t *snake, int key_pressed) {
+    
+    clock_t begin = clock();
+    
+    if (checkDirection(snake, snake->direction, key_pressed))
+        changeDirection(snake, key_pressed);
+
+    if (isCrash(snake)) {
+        return 1;
+    }
+
+    go(snake);
+    goTail(snake);
+
+    if (haveEat(snake, food)) {
+        addTail(snake);
+    }
+
+    refreshFood(food, SEED_NUMBER);
+
+    while ((double)(clock() - begin)/CLOCKS_PER_SEC < DELAY)
+    {}
+
+    return 0;
+}
+
+int main()
+{
     snake_t *snake = (snake_t *) malloc(sizeof(snake_t));
     
     initSnake(snake, START_TAIL_SIZE, 10, 10);
@@ -284,26 +312,13 @@ int main() {
 
     putFood(food, SEED_NUMBER);
     timeout(0);    //Отключаем таймаут после нажатия клавиши в цикле
+    
     int key_pressed = 0;
     while (key_pressed != STOP_GAME) {
         key_pressed = toupper(getch()); // Считываем клавишу
 
-        if (checkDirection(snake, snake->direction, key_pressed))
-            changeDirection(snake, key_pressed);
-        
-        if (isCrash(snake))
+        if (update(snake, key_pressed))
             break;
-
-        go(snake);
-        goTail(snake);
-        
-        if (haveEat(snake, food)) {
-            addTail(snake);
-        }
-
-        refreshFood(food, SEED_NUMBER);
-
-        timeout(100); // Задержка при отрисовке
     }
 
     setColor(SNAKE);
