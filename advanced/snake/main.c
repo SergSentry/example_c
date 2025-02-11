@@ -8,13 +8,19 @@
 #include <ctype.h>
 
 #define MIN_Y  2
+
 enum {
     LEFT = 1, UP, RIGHT, DOWN, STOP_GAME = KEY_F(10)
 };
+
 enum {
-    CONTROLS=2, MAX_TAIL_SIZE = 100, START_TAIL_SIZE = 3, MAX_FOOD_SIZE = 20, FOOD_EXPIRE_SECONDS = 10
+    CONTROLS=2, MAX_TAIL_SIZE = 100, START_TAIL_SIZE = 3, MAX_FOOD_SIZE = 20, FOOD_EXPIRE_SECONDS = 10, SEED_NUMBER = 3
 };
 
+enum{
+    SNAKE = 1,
+    FOOD = 2
+};
 
 // Здесь храним коды управления змейкой
 struct control_buttons {
@@ -51,6 +57,29 @@ typedef struct tail_t {
     int y;
 } tail_t;
 
+struct food {
+    int x;
+    int y;
+    time_t put_time;
+    char point;
+    uint8_t enable;
+} food[MAX_FOOD_SIZE];
+
+void setColor(int objectType){
+    attroff(COLOR_PAIR(1));
+    attroff(COLOR_PAIR(2));
+    switch (objectType){
+        case 1:{ // SNAKE
+            attron(COLOR_PAIR(1));
+            break;
+        }
+        case 2:{ // FOOD
+            attron(COLOR_PAIR(2));
+            break;
+        }
+    }
+}
+
 void initTail(struct tail_t t[], size_t size) {
     struct tail_t init_t = {0, 0};
     for (size_t i = 0; i < size; i++) {
@@ -73,12 +102,22 @@ void initSnake(snake_t *head, size_t size, int x, int y) {
     head->controls = default_controls;
 }
 
+void initFood(struct food f[], size_t size) {
+    struct food init = {0, 0, 0, 0, 0};
+    int max_y = 0, max_x = 0;
+    getmaxyx(stdscr, max_y, max_x);
+    for (size_t i = 0; i < size; i++) {
+        f[i] = init;
+    }
+}
+
 /*
  Движение головы с учетом текущего направления движения
  */
 void go(struct snake_t *head) {
     char ch = '@';
     int max_x = 0, max_y = 0;
+    setColor(SNAKE);
     getmaxyx(stdscr, max_y, max_x); // macro - размер терминала
     mvprintw(head->y, head->x, " "); // очищаем один символ
     switch (head->direction) {
@@ -137,6 +176,7 @@ void changeDirection(struct snake_t *snake, const int32_t key) {
  */
 void goTail(struct snake_t *head) {
     char ch = '*';
+    setColor(SNAKE);
     mvprintw(head->tail[head->tsize - 1].y, head->tail[head->tsize - 1].x, " ");
     for (size_t i = head->tsize - 1; i > 0; i--) {
         head->tail[i] = head->tail[i - 1];
@@ -169,31 +209,106 @@ int checkDirection(int32_t dir, int32_t key) {
     }
 }
 
+void addTail(struct snake_t *head) {
+    if (head == NULL || head->tsize > MAX_TAIL_SIZE) {
+        mvprintw(0, 0, "Can't add tail");
+        return;
+    }
+    head->tsize++;
+}
+
+void putFoodSeed(struct food *fp) {
+    int max_x = 0, max_y = 0;
+    char spoint[2] = {0};
+    getmaxyx(stdscr, max_y, max_x);
+    mvprintw(fp->y, fp->x, " ");
+    fp->x = rand() % (max_x - 1);
+    fp->y = rand() % (max_y - 2) + 1; //Не занимаем верхнюю строку
+    fp->put_time = time(NULL);
+    fp->point = '$';
+    fp->enable = 1;
+    spoint[0] = fp->point;
+    setColor(FOOD);
+    mvprintw(fp->y, fp->x, spoint);
+}
+
+void putFood(struct food f[], size_t number_seeds) {
+    for (size_t i = 0; i < number_seeds; i++) {
+        putFoodSeed(&f[i]);
+    }
+}
+
+void refreshFood(struct food f[], int nfood) {
+    int max_x = 0, max_y = 0;
+    char spoint[2] = {0};
+    getmaxyx(stdscr, max_y, max_x);
+    for (size_t i = 0; i < nfood; i++) {
+        if (f[i].put_time) {
+            if (!f[i].enable || (time(NULL) - f[i].put_time) > FOOD_EXPIRE_SECONDS) {
+                putFoodSeed(&f[i]);
+            }
+        }
+    }
+}
+
+_Bool haveEat(struct snake_t *head, struct food f[]) {
+    for (size_t i = 0; i < MAX_FOOD_SIZE; i++)
+        if (f[i].enable && head->x == f[i].x && head->y == f[i].y) {
+            f[i].enable = 0;
+            return 1;
+        }
+    return 0;
+}
+
 int main() {
     snake_t *snake = (snake_t *) malloc(sizeof(snake_t));
+    
     initSnake(snake, START_TAIL_SIZE, 10, 10);
+    initFood(food, MAX_FOOD_SIZE);
+
     initscr();
     keypad(stdscr, TRUE); // Включаем F1, F2, стрелки и т.д.
     raw();                // Откдючаем line buffering
     noecho();            // Отключаем echo() режим при вызове getch
     curs_set(FALSE);    //Отключаем курсор
     mvprintw(0, 0, "Use arrows for control. Press 'F10' for EXIT");
+    
+    start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_RED, COLOR_BLACK);
+
+    putFood(food, SEED_NUMBER);
     timeout(0);    //Отключаем таймаут после нажатия клавиши в цикле
     int key_pressed = 0;
     while (key_pressed != STOP_GAME) {
         key_pressed = toupper(getch()); // Считываем клавишу
-        go(snake);
-        goTail(snake);
-        timeout(100); // Задержка при отрисовке
-
+        
         if (checkDirection(snake->direction, key_pressed))
             changeDirection(snake, key_pressed);
-
+        
         if (isCrash(snake))
             break;
+
+        go(snake);
+        goTail(snake);
+        
+        if (haveEat(snake, food)) {
+            addTail(snake);
+        }
+
+        refreshFood(food, SEED_NUMBER);
+
+        timeout(100); // Задержка при отрисовке
     }
+
+    setColor(SNAKE);
+
     free(snake->tail);
     free(snake);
+    
+    getch();
+    
     endwin(); // Завершаем режим curses mod
+
     return 0;
 }
