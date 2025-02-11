@@ -200,13 +200,18 @@ _Bool isCrash(struct snake_t *head) {
 /*
   Check hitting the tail
 */
-int checkDirection(int32_t dir, int32_t key) {
-    if (KEY_DOWN == key && dir == UP || KEY_UP == key && dir == DOWN || KEY_LEFT == key && dir == RIGHT ||
-        KEY_RIGHT == key && dir == LEFT) {
-        return 0;
-    } else {
-        return 1;
+int checkDirection(struct snake_t *snake, int32_t dir, int32_t key) {
+    for (size_t i = 0; i < CONTROLS; i++) {
+        struct control_buttons ctrl = snake->controls[i];
+
+        if (ctrl.down == key && dir == UP || ctrl.up == key && dir == DOWN || ctrl.left == key && dir == RIGHT ||
+            ctrl.right == key && dir == LEFT) {
+            return 0;
+        }
     }
+    
+
+    return 1;  
 }
 
 void addTail(struct snake_t *head) {
@@ -282,8 +287,8 @@ int main() {
     int key_pressed = 0;
     while (key_pressed != STOP_GAME) {
         key_pressed = toupper(getch()); // Считываем клавишу
-        
-        if (checkDirection(snake->direction, key_pressed))
+
+        if (checkDirection(snake, snake->direction, key_pressed))
             changeDirection(snake, key_pressed);
         
         if (isCrash(snake))
