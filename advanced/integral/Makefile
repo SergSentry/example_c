@@ -7,7 +7,7 @@ EXECUTABLE_DIR=bin/
 SOURCES=$(SOURCES_DIR)integral.c $(SOURCES_DIR)function.h $(SOURCES_DIR)preset_function.c $(SOURCES_DIR)preset_function.h $(SOURCES_DIR)math_function.c $(SOURCES_DIR)math_function.h
 EXECUTABLE=$(EXECUTABLE_DIR)integral
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(SOURCES) $(EXECUTABLE) removeobject
 
 $(EXECUTABLE): $(EXECUTABLE_DIR)integral.o $(EXECUTABLE_DIR)preset_function.o $(EXECUTABLE_DIR)math_function.o
 	$(CC) $(EXECUTABLE_DIR)integral.o $(EXECUTABLE_DIR)preset_function.o $(EXECUTABLE_DIR)math_function.o -o $(EXECUTABLE)
@@ -23,6 +23,9 @@ $(EXECUTABLE_DIR)math_function.o: makedir $(SOURCES_DIR)math_function.c $(SOURCE
 
 makedir:
 	mkdir -p $(EXECUTABLE_DIR)
+
+removeobject:
+	rm -f $(EXECUTABLE_DIR)*.o
 
 clean:
 	rm -f $(EXECUTABLE_DIR)*.o $(EXECUTABLE)
