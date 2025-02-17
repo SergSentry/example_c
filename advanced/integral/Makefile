@@ -4,7 +4,7 @@ CFLAGS=-c -Wall
 SOURCES_DIR=src/
 EXECUTABLE_DIR=bin/
 
-SOURCES=$(SOURCES_DIR)integral.c
+SOURCES=$(SOURCES_DIR)integral.c $(SOURCES_DIR)function.h 
 EXECUTABLE=$(EXECUTABLE_DIR)integral
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -12,7 +12,7 @@ all: $(SOURCES) $(EXECUTABLE)
 $(EXECUTABLE): $(EXECUTABLE_DIR)integral.o
 	$(CC) $(EXECUTABLE_DIR)integral.o -o $(EXECUTABLE)
 
-$(EXECUTABLE_DIR)integral.o: makedir $(SOURCES_DIR)integral.c
+$(EXECUTABLE_DIR)integral.o: makedir $(SOURCES_DIR)integral.c $(SOURCES_DIR)function.h 
 	$(CC) $(CFLAGS) $(SOURCES_DIR)integral.c -o $(EXECUTABLE_DIR)integral.o
 
 
