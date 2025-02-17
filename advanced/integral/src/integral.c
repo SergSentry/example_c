@@ -11,6 +11,7 @@
 #include <inttypes.h>
 
 #include "function.h"
+#include "preset_function.h"
 
 #define ARG_KEY_HELP        "-help" //Аргумент вывода справочной информации
 #define ARG_KEY_TEST        "-test" //Аргумент интерактивного тестирования
