@@ -101,7 +101,7 @@ operation_t show_menu_and_select_operation() {
             operation = rootFindDiv2;
             break;
         case 2:
-            printf("Вычисление интеграла\n");
+            operation = integral;
             break;
     }
 
@@ -143,6 +143,16 @@ void test_handler() {
     }
 }
 
+/// Функция сравнения двух чисел типа float
+/// \param a Число
+/// \param b Число
+/// \return
+int compare(const void *a, const void *b) {
+    float fa = *(const float *) a;
+    float fb = *(const float *) b;
+    return (fa > fb) - (fa < fb);
+}
+
 /// Основная функция
 /// \param argc Кол-во аргументов
 /// \param argv Массив аргументов
@@ -156,6 +166,7 @@ int32_t main(int argc, char *argv[]) {
 
     // Указатели на функции вычисления корня и интеграла
     operation_t root_find = rootFindDiv2;
+    operation_t calc_integral = integral;
 
     // Проверка на аргумент вывода справочной информации
     if (index_of_arg(argc, argv, ARG_KEY_HELP) > 0) {
@@ -199,6 +210,27 @@ int32_t main(int argc, char *argv[]) {
 
     roots[2] = root_find(a, b, eps_one, second_third_func);
     printf("Точка пересечения кривых (x − 2)^3 – 1 и 3/x на интервале [%.4f, %2.4f] равна %.4f\n", a, b, roots[2]);
+
+    // Сортируем корни, для определения интервала интегрирования
+    qsort(roots, 3, sizeof(float), compare);
+
+    float min_x = roots[0];
+    float max_x = roots[2];
+
+    // Нахождение интегралов функций на интервале [min_x, max_x]
+    float first_func_integral = calc_integral(min_x, max_x, eps_two, first_func);
+    float second_func_integral = calc_integral(min_x, max_x, eps_two, second_func);
+    float third_func_integral = calc_integral(min_x, max_x, eps_two, third_func);
+
+    // Поскольку первая функция выше второй и третей,
+    // то из интеграла первой функции вычитаем сумму второй и третьей функции
+    float result_integral = first_func_integral - (second_func_integral + third_func_integral);
+
+    printf("Площадь плоской фигуры, ограниченной тремя кривыми:\n");
+    printf("  f(x) = 0.6x + 3\n");
+    printf("  f(x) = (x − 2)^3 – 1\n");
+    printf("  f(x) = 3/x\n");
+    printf("равна %f\n", result_integral);
 
     return 0;
 }
