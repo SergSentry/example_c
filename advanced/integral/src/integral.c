@@ -68,13 +68,13 @@ function_t show_menu_and_select_function() {
     function_t function = NULL;
     switch (input_function) {
         case 1:
-            printf("f(x) = 0.6x + 3\n");
+            function = first_func;
             break;
         case 2:
-            printf("f(x) = (x − 2)^3 – 1\n");
+            function = second_func;
             break;
         case 3:
-            printf("f(x) = 3/x\n");
+            function = third_func;
             break;
     }
 
@@ -98,7 +98,7 @@ operation_t show_menu_and_select_operation() {
     operation_t operation = NULL;
     switch (input_function) {
         case 1:
-            printf("Вычисление корней\n");
+            operation = rootFindDiv2;
             break;
         case 2:
             printf("Вычисление интеграла\n");
@@ -154,6 +154,9 @@ int32_t main(int argc, char *argv[]) {
     // Переменная задающая точность вычисления интеграла
     float eps_two = 0.001f;
 
+    // Указатели на функции вычисления корня и интеграла
+    operation_t root_find = rootFindDiv2;
+
     // Проверка на аргумент вывода справочной информации
     if (index_of_arg(argc, argv, ARG_KEY_HELP) > 0) {
         help_handler();
@@ -179,6 +182,23 @@ int32_t main(int argc, char *argv[]) {
         eps_two = atof(argv[index_eps_two + 1]);
         printf("eps_two %f\n", eps_two);
     }
+
+        // В группу кривых входит гипербола расположенная в первой и третьей четверти плоскости.
+    // Расчет площади фигуры выполняется для первой четверти плоскости в интервале [.0001, 5]
+    float a = 0.0001f;
+    float b = 5;
+
+    // Массив корней
+    float roots[3] = {0,};
+
+    roots[0] = root_find(a, b, eps_one, first_third_func);
+    printf("Точка пересечения кривых 0.6x + 3 и 3/x на интервале [%.4f, %.4f] равна %f\n", a, b, roots[0]);
+
+    roots[1] = root_find(a, b, eps_one, first_second_func);
+    printf("Точка пересечения кривых 0.6x + 3 и (x − 2)^3 – 1 на интервале [%.4f, %.4f] равна %f\n", a, b, roots[1]);
+
+    roots[2] = root_find(a, b, eps_one, second_third_func);
+    printf("Точка пересечения кривых (x − 2)^3 – 1 и 3/x на интервале [%.4f, %2.4f] равна %.4f\n", a, b, roots[2]);
 
     return 0;
 }
