@@ -10,6 +10,7 @@
 #include <string.h>
 #include <inttypes.h>
 
+#include "function.h"
 
 #define ARG_KEY_HELP        "-help" //Аргумент вывода справочной информации
 #define ARG_KEY_TEST        "-test" //Аргумент интерактивного тестирования
@@ -46,9 +47,98 @@ int32_t index_of_arg(int32_t argc, char *argv[], const char *str) {
     return -1;
 }
 
+/// Функция вывода меню выбора исполняемой функции:
+/// 1. f(x) = 0.6x + 3
+/// 2. f(x) = (x − 2)^3 – 1
+/// 3. f(x) = 3/x
+/// \return Указатель на исполняемую функцию
+function_t show_menu_and_select_function() {
+    uint32_t input_function = 4;
+    do {
+        printf("Введите номер функции:\n");
+        printf("  1. f(x) = 0.6x + 3\n");
+        printf("  2. f(x) = (x − 2)^3 – 1\n");
+        printf("  3. f(x) = 3/x\n");
+        printf("  4. Exit\n");
+        scanf("%u", &input_function);
+    } while (input_function > 4 || input_function == 0);
+
+    function_t function = NULL;
+    switch (input_function) {
+        case 1:
+            printf("f(x) = 0.6x + 3\n");
+            break;
+        case 2:
+            printf("f(x) = (x − 2)^3 – 1\n");
+            break;
+        case 3:
+            printf("f(x) = 3/x\n");
+            break;
+    }
+
+    return function;
+}
+
+/// Функция вывода меню выбора исполняемой операции:
+/// 1. вычисление корней
+/// 2. вычисление интеграла
+/// \return Указатель на исполняемую операции
+operation_t show_menu_and_select_operation() {
+    uint32_t input_function = 3;
+    do {
+        printf("Введите номер операции:\n");
+        printf("  1. Вычисление корней\n");
+        printf("  2. Вычисление интеграла\n");
+        printf("  3. Exit\n");
+        scanf("%u", &input_function);
+    } while (input_function > 3 || input_function == 0);
+
+    operation_t operation = NULL;
+    switch (input_function) {
+        case 1:
+            printf("Вычисление корней\n");
+            break;
+        case 2:
+            printf("Вычисление интеграла\n");
+            break;
+    }
+
+    return operation;
+}
+
 /// Процедура выполнения интерактивного теста
 void test_handler() {
-    printf("Процедура выполнения интерактивного теста\n");
+    function_t function = show_menu_and_select_function();
+
+    if (function != NULL) {
+        operation_t operation = show_menu_and_select_operation();
+        if (operation != NULL) {
+            float a, b, eps, result;
+            printf("Введите значение a:\n");
+            scanf("%f", &a);
+
+            //Проверка значения b
+            do {
+                printf("Введите значение b:\n");
+                scanf("%f", &b);
+                if (b < a)
+                    printf("Значение b должно быть больше значения a (%f)\n", a);
+            } while (b < a);
+
+            //Проверка значения epsilon
+            do {
+                printf("Введите значение epsilon:\n");
+                scanf("%f", &eps);
+                if (eps <= 0 || eps >= 1)
+                    printf("Значение epsilon должно быть больше 0 и меньше 1\n");
+            } while (eps <= 0 || eps >= 1);
+
+            //Выполнение операции с заданными параметрами и указанной функцией
+            result = operation(a, b, eps, function);
+
+            printf("%f\n", result);
+        }
+    }
 }
 
 /// Основная функция
